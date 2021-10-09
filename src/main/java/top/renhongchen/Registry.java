@@ -1,4 +1,4 @@
 package top.renhongchen;
 
-public class Service {
+public class Registry {
 }
