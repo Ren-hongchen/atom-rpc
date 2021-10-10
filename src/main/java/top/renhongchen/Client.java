@@ -9,6 +9,9 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Client {
     private String host;
     private int port;
@@ -20,18 +23,18 @@ public class Client {
         this.dto = dto;
     }
 
-    public void send() throws Exception {
+    public void send() throws InterruptedException {
         EventLoopGroup workgroup = new NioEventLoopGroup();
         try {
             Bootstrap bootstrap = new Bootstrap();
             bootstrap.group(workgroup)
                     .channel(NioSocketChannel.class)
-                    .option(ChannelOption.SO_KEEPALIVE,true)
+                    .option(ChannelOption.TCP_NODELAY,true)
                     .handler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         public void initChannel(SocketChannel socketChannel) throws Exception {
-                            socketChannel.pipeline().addLast("encoder",new KryoEncoder());
-                            socketChannel.pipeline().addLast("decoder",new KryoDecoder());
+                            socketChannel.pipeline().addLast(new KryoEncoder());
+                            socketChannel.pipeline().addLast(new KryoDecoder());
                             socketChannel.pipeline().addLast(new ClientHandler(dto));
                         }
                     });
@@ -40,5 +43,17 @@ public class Client {
         } finally {
             workgroup.shutdownGracefully();
         }
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        DTO dto = new DTO();
+        dto.setName("client");
+        Map<Integer,Object> map = new HashMap<>();
+        String answer = "client test";
+        map.put(1,answer);
+        dto.setParameters(map);
+
+        Client client = new Client("127.0.0.1",8080,dto);
+        client.send();
     }
 }

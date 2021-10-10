@@ -3,15 +3,34 @@ package top.renhongchen;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.esotericsoftware.kryo.serializers.BeanSerializer;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.HashMap;
 
 public class Serializer {
-    public static void encode(ByteBuf byteBuf,DTO dto) {
-        Kryo kryo = new Kryo();
-        kryo.register(DTO.class);
+
+    final ThreadLocal<Kryo> kryoLocal = new ThreadLocal<Kryo>() {
+        @Override
+        protected Kryo initialValue() {
+            Kryo kryo = new Kryo();
+            kryo.register(HashMap.class);
+            kryo.register(DTO.class);
+            return kryo;
+        }
+    };
+
+    private Kryo getKryo() {
+        return kryoLocal.get();
+    }
+
+
+
+    public byte[] encode(Object dto) {
+        Kryo kryo = getKryo();
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         Output output = new Output(byteArrayOutputStream);
@@ -19,17 +38,17 @@ public class Serializer {
         kryo.writeClassAndObject(output,dto);
 
         output.flush();
-        output.close();
+        return byteArrayOutputStream.toByteArray();
     }
 
-    public static Object decode(ByteBuf byteBuf) {
-        if(byteBuf == null) {
+    public Object decode(byte[] bytes) {
+        if(bytes == null) {
             return null;
         }
-        Kryo kryo = new Kryo();
-        kryo.register(DTO.class);
+        Kryo kryo = getKryo();
 
-        Input input = new Input(new ByteBufInputStream(byteBuf));
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
+        Input input = new Input(byteArrayInputStream);
         return kryo.readClassAndObject(input);
     }
 }

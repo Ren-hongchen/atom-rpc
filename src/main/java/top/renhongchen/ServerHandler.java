@@ -12,16 +12,16 @@ import java.util.Map;
 public class ServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) {
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         try {
             DTO dto = new DTO();
-            dto.setName("test");
+            dto.setName("server");
             Map<Integer,Object> map = new HashMap<>();
-            String answer = "测试结果";
+            String answer = "server test";
             map.put(1,answer);
             dto.setParameters(map);
-
             System.out.printf("server return msg" + dto);
+
             ChannelFuture channelFuture = ctx.writeAndFlush(dto);
             channelFuture.addListener(ChannelFutureListener.CLOSE);
         } finally {
