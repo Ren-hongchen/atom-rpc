@@ -1,8 +1,9 @@
-package top.renhongchen;
+package top.renhongchen.serializer;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
+import top.renhongchen.DTO;
 
 public class KryoEncoder extends MessageToByteEncoder<DTO> {
     private Serializer serializer = new Serializer();

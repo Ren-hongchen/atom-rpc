@@ -1,11 +1,9 @@
-package top.renhongchen;
+package top.renhongchen.serializer;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.esotericsoftware.kryo.serializers.BeanSerializer;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufInputStream;
+import top.renhongchen.DTO;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

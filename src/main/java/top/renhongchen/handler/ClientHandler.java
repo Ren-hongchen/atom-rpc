@@ -1,8 +1,9 @@
-package top.renhongchen;
+package top.renhongchen.handler;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
+import top.renhongchen.DTO;
 
 public class ClientHandler extends ChannelInboundHandlerAdapter {
     private DTO dto;
