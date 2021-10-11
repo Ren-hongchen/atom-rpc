@@ -13,8 +13,8 @@ public class AppTest
      * Rigorous Test :-)
      */
     @Test
-    public void shouldAnswerWithTrue()
-    {
-        assertTrue( true );
+    public void clientTest() {
+        DTO message = new DTO();
+        Client client = new Client("127.0.0.1",8080,message);
     }
 }

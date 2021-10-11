@@ -1,4 +1,4 @@
 package top.renhongchen;
 
-public class Caller {
+public class ServerStub {
 }

@@ -6,25 +6,27 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
 import top.renhongchen.DTO;
+import top.renhongchen.ServerMapper;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.lang.reflect.Method;
 
 public class ServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         try {
-            DTO dto = new DTO();
-            dto.setName("server");
-            Map<Integer,Object> map = new HashMap<>();
-            String answer = "server test";
-            map.put(1,answer);
-            dto.setParameters(map);
-            System.out.printf("server return msg" + dto);
+            DTO request = (DTO) msg;
+            ServerMapper serverMapper = new ServerMapper(request);
+            if(request.getName() == "list") {
+                Method[] methods = serverMapper.list();
+                ChannelFuture channelFuture = ctx.writeAndFlush(methods);
+                channelFuture.addListener(ChannelFutureListener.CLOSE);
+            } else {
+                Object returnValue = serverMapper.invoke(request);
+                ChannelFuture channelFuture = ctx.writeAndFlush(returnValue);
+                channelFuture.addListener(ChannelFutureListener.CLOSE);
+            }
 
-            ChannelFuture channelFuture = ctx.writeAndFlush(dto);
-            channelFuture.addListener(ChannelFutureListener.CLOSE);
         } finally {
             ReferenceCountUtil.release(msg);
         }

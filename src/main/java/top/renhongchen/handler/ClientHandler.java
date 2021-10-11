@@ -7,23 +7,27 @@ import top.renhongchen.DTO;
 
 public class ClientHandler extends ChannelInboundHandlerAdapter {
     private DTO dto;
+    private String message;
 
     public ClientHandler(DTO dto){
         this.dto = dto;
     }
 
+    public ClientHandler(String message) { this.message = message; }
+
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         super.channelActive(ctx);
-        System.out.printf("Client send message:" + dto);
+        System.out.printf("Client send dto: " + dto);
+        System.out.printf("Client send message: " + message);
         ctx.writeAndFlush(dto);
     }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         try {
-            DTO dto = (DTO) msg;
-            System.out.printf("Client received:" + dto);
+            String returnValue = (String) msg;
+            System.out.printf("Client received:" + returnValue);
         } finally {
             ReferenceCountUtil.release(msg);
         }
