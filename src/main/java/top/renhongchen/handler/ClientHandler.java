@@ -15,7 +15,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         super.channelActive(ctx);
-        System.out.printf("Client send dto: " + dto);
+        System.out.println("Client send dto: " + dto);
         ctx.writeAndFlush(dto);
     }
 
@@ -23,7 +23,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         try {
             DTO returnValue = (DTO) msg;
-            System.out.printf("Client received:" + returnValue);
+            System.out.println("Client received:" + returnValue);
         } finally {
             ReferenceCountUtil.release(msg);
         }

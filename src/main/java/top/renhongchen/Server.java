@@ -52,10 +52,6 @@ public class Server {
     }
 
     public static void main(String[] args) throws Exception {
-        ServerFunction serverFunction = new ServerFunction();
-        Class<ServerFunction> clazz = ServerFunction.class;
-        Method[] methods = clazz.getMethods();
-
 
         int port = 8080;
         if(args.length > 0) {

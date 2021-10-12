@@ -7,8 +7,10 @@ import top.renhongchen.DTO;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Serializer {
 
@@ -16,6 +18,9 @@ public class Serializer {
         @Override
         protected Kryo initialValue() {
             Kryo kryo = new Kryo();
+            kryo.register(HashMap.class);
+            kryo.register(ArrayList.class);
+            kryo.register(Map.class);
             kryo.register(List.class);
             kryo.register(Object.class);
             kryo.register(DTO.class);
