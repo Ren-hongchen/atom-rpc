@@ -14,6 +14,8 @@ import top.renhongchen.serializer.KryoDecoder;
 import top.renhongchen.serializer.KryoEncoder;
 import top.renhongchen.handler.ServerHandler;
 
+import java.lang.reflect.Method;
+
 public class Server {
 
     private int port;
@@ -50,6 +52,11 @@ public class Server {
     }
 
     public static void main(String[] args) throws Exception {
+        ServerFunction serverFunction = new ServerFunction();
+        Class<ServerFunction> clazz = ServerFunction.class;
+        Method[] methods = clazz.getMethods();
+
+
         int port = 8080;
         if(args.length > 0) {
             port = Integer.parseInt(args[0]);

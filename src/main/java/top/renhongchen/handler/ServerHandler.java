@@ -9,6 +9,7 @@ import top.renhongchen.DTO;
 import top.renhongchen.ServerMapper;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
 public class ServerHandler extends ChannelInboundHandlerAdapter {
 
@@ -17,8 +18,8 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
         try {
             DTO request = (DTO) msg;
             ServerMapper serverMapper = new ServerMapper(request);
-            if(request.getName() == "list") {
-                Method[] methods = serverMapper.list();
+            if("list".equals(request.getOrder())) {
+                List<Method> methods = serverMapper.list();
                 ChannelFuture channelFuture = ctx.writeAndFlush(methods);
                 channelFuture.addListener(ChannelFutureListener.CLOSE);
             } else {

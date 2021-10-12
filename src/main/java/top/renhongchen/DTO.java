@@ -8,4 +8,6 @@ import java.util.List;
 public class DTO {
     private String name;  //远程调用函数名
     private List<Object> parameters; //远程调用参数
+    private String order;
+    private Object returnValue;
 }
