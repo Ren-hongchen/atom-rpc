@@ -1,5 +1,7 @@
 package top.renhongchen;
 
+import cn.hutool.core.util.ReflectUtil;
+
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -49,10 +51,9 @@ public class ServerMapper {
         if (dto.getName() == null || dto.getCall_parameters() == null) {
             return null;
         }
-
-        Class<ServerFunction> clazz = ServerFunction.class;
-        Method method = clazz.getMethod(dto.getName());
-        Object returnValue = method.invoke(clazz.getDeclaredConstructor().newInstance(),dto.getCall_parameters());
+        ServerFunction serverFunction = new ServerFunction();
+        Object[] objects = dto.getCall_parameters().toArray(new Object[dto.getCall_parameters().size()]);
+        Object returnValue = ReflectUtil.invoke(serverFunction,dto.getName(),objects);
         return returnValue;
     }
 

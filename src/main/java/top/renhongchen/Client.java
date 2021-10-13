@@ -1,5 +1,8 @@
 package top.renhongchen;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Client {
     private String host;
     private int port;
@@ -19,7 +22,11 @@ public class Client {
 
     public static void main(String[] args) throws Exception {
         DTO message = new DTO();
-        message.setOrder("list");
+        message.setName("add");
+        List<Object> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        message.setCall_parameters(list);
         Client client = new Client("127.0.0.1",8080,message);
         client.send();
     }

@@ -30,8 +30,9 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
                 channelFuture.addListener(ChannelFutureListener.CLOSE);
             } else {
                 Object returnValue = serverMapper.invoke(request);
-                ChannelFuture channelFuture = ctx.writeAndFlush(returnValue);
-                System.out.println("Server return: " + returnValue);
+                result.setReturnValue(returnValue);
+                ChannelFuture channelFuture = ctx.writeAndFlush(result);
+                System.out.println("Server return: " + result);
                 channelFuture.addListener(ChannelFutureListener.CLOSE);
             }
 
