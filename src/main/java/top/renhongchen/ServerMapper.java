@@ -5,11 +5,6 @@ import java.util.*;
 
 public class ServerMapper {
     private final DTO dto;
-    private Map<String,String> functions = new HashMap<>();
-    private static String func_parameterType_1;
-    private static String func_parameterType_2;
-    private static String func_parameterType_3;
-    private static String func_parameterType_4;
 
     public ServerMapper(DTO dto) {
         this.dto = dto;
@@ -20,6 +15,7 @@ public class ServerMapper {
         Class<ServerFunction> clazz = ServerFunction.class;
         Method[] methods = clazz.getDeclaredMethods();
         for(int i = 0; i<methods.length; i ++) {
+            Map<String,String> functions = new HashMap<>();
             String func_name = methods[i].getName();
             String func_returnType = methods[i].getReturnType().getName();
             int parameters_count = methods[i].getParameterTypes().length;
@@ -30,30 +26,33 @@ public class ServerMapper {
             for(int j = 0; j<parameters_count; j++) {
                 Class[] parameterTypes = methods[i].getParameterTypes();
                 switch (j) {
-                    case 0: func_parameterType_1 = parameterTypes[j].getName();break;
-                    case 1: func_parameterType_2 = parameterTypes[j].getName();break;
-                    case 2: func_parameterType_3 = parameterTypes[j].getName();break;
-                    case 3: func_parameterType_4 = parameterTypes[j].getName();break;
+                    case 0: String func_parameterType_1 = parameterTypes[j].getName();
+                            functions.put("func_parameterType_1",func_parameterType_1);
+                            break;
+                    case 1: String func_parameterType_2 = parameterTypes[j].getName();
+                            functions.put("func_parameterType_2",func_parameterType_2);
+                            break;
+                    case 2: String func_parameterType_3 = parameterTypes[j].getName();
+                            functions.put("func_parameterType_3",func_parameterType_3);
+                            break;
+                    case 3: String func_parameterType_4 = parameterTypes[j].getName();
+                            functions.put("func_parameterType_4",func_parameterType_4);
+                            break;
                 }
             }
-            functions.put("func_parameterType_1",func_parameterType_1);
-            functions.put("func_parameterType_2",func_parameterType_2);
-            functions.put("func_parameterType_3",func_parameterType_3);
-            functions.put("func_parameterType_4",func_parameterType_4);
             methodList.add(functions);
-            functions.clear();
         }
         return methodList;
     }
 
     public Object invoke(DTO dto) throws Exception{
-        if (dto.getName() == null || dto.getParameters() == null) {
+        if (dto.getName() == null || dto.getCall_parameters() == null) {
             return null;
         }
 
         Class<ServerFunction> clazz = ServerFunction.class;
         Method method = clazz.getMethod(dto.getName());
-        Object returnValue = method.invoke(clazz.getDeclaredConstructor().newInstance(),dto.getParameters());
+        Object returnValue = method.invoke(clazz.getDeclaredConstructor().newInstance(),dto.getCall_parameters());
         return returnValue;
     }
 

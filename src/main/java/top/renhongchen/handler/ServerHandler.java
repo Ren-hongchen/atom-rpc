@@ -1,5 +1,6 @@
 package top.renhongchen.handler;
 
+import cn.hutool.core.bean.BeanUtil;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
@@ -19,10 +20,13 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
             DTO request = (DTO) msg;
             System.out.println("Server received: " + request);
             ServerMapper serverMapper = new ServerMapper(request);
+            DTO result = new DTO();
+            BeanUtil.copyProperties(request,result);
             if("list".equals(request.getOrder())) {
                 List<Map<String,String>> methods = serverMapper.list();
-                ChannelFuture channelFuture = ctx.writeAndFlush(methods);
-                System.out.println("Server return: " + methods);
+                result.setReturnList(methods);
+                ChannelFuture channelFuture = ctx.writeAndFlush(result);
+                System.out.println("Server return: " + result);
                 channelFuture.addListener(ChannelFutureListener.CLOSE);
             } else {
                 Object returnValue = serverMapper.invoke(request);
@@ -31,7 +35,10 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
                 channelFuture.addListener(ChannelFutureListener.CLOSE);
             }
 
-        } finally {
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+            finally {
             ReferenceCountUtil.release(msg);
         }
     }
